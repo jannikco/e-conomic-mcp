@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "product": "pipmcp",
+  "credential": "PIPMCP_API_KEY",
+  "skills": [
+    {
+      "name": "pipmcp-e-conomic",
+      "description": "Connect AI agents to e-conomic using one PipMCP API key and actual hosted tool discovery."
+    }
+  ],
+  "files": {
+    "skills/pipmcp-e-conomic/SKILL.md": "762bd4f5d8922ddd46514b354226392f4ed9bc5d9964590b81209b598370a05c"
+  }
+}
