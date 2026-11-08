@@ -1,49 +1,70 @@
-# e-conomic MCP setup and connection checker
+# e-conomic MCP server
 
-Generate e-conomic MCP client configuration, inspect available tools and validate hosted endpoint access through PipMCP.
+Find an accounting customer and add a named contact to that existing customer.
 
-Maintainer: jannikco · License: MIT · Verification: **mock-only**
+A direct-provider MCP server with useful local execution. No PipMCP account is required for local use. Provider API access and any provider charges are your responsibility.
 
 ## Quick start
 
-Requires Node.js 22 or later.
+Requires Node.js22+. Clone this repository, then run:
 
 ```sh
-npm ci
+npm ci --ignore-scripts
 npm test
 npm start
 ```
 
-The default example runs locally without credentials and makes no external changes. Verification status describes recorded evidence; local configuration tests do not establish that provider authentication or execution works.
+The default command inspects the tools offline. Configure your own credentials in your environment:
 
-## Connect e-conomic
+- `ECONOMIC_APP_SECRET_TOKEN`
+- `ECONOMIC_AGREEMENT_GRANT_TOKEN`
 
-[Create or sign in to PipMCP](https://pipmcp.com/register?app=e-conomic&utm_source=github&utm_campaign=github-e-conomic-mcp) and select the integration. Connect your authorized provider account and copy its hosted MCP endpoint. Set PIPMCP_ENDPOINT and, if required, PIPMCP_TOKEN in your environment. Run npm start to produce client configuration; run npm start -- --live for a read-only connection check. Provider app presence is catalog evidence, not live verification.
 
-## Managed service
 
-[Continue with PipMCP](https://pipmcp.com/register?app=e-conomic&utm_source=github&utm_campaign=github-e-conomic-mcp). This repository is maintained by the integration team and does not imply endorsement by LinkedIn or other providers.
+Credential help: https://www.e-conomic.com/developer/connect
 
-## Provenance and support
+## Execute a real read
 
-Source revision: edb23e8fda91aca794065d3ee52d1bd9f4fddcb1d017bded351eae8002640c1e. The complete manifest is in integration.json; SHA256SUMS covers the reviewed artifact. Open a repository issue without credentials or personal data. See SECURITY.md for sensitive reports. No telemetry is sent by this code; signup links include explicit campaign parameters.
+Replace example record IDs with records you are authorized to access.
 
-## Provider setup inventory
-
-Run `npm start -- --setup` to inspect this app's recorded authentication requirements and setup links offline. Credentials are entered in PipMCP; this repository lists required field names only.
-
-```json
-{
-  "type": "custom_headers",
-  "requiredCredentialFields": [
-    "provider_header_credentials"
-  ],
-  "requiredHeaderNames": [],
-  "helpUrl": "https://www.e-conomic.com/developer/connect",
-  "tenantRequired": false,
-  "accountParameterNames": []
-}
+```sh
+npm start -- --call economic_list_customers '{}'
 ```
 
-Provider documentation: https://restdocs.e-conomic.com/
-Provider website: https://www.e-conomic.com/
+## Use with an MCP client
+
+Launch `node /absolute/path/e-conomic-mcp/server.mjs` using stdio transport; pass credentials through the client environment. Stdout is reserved for JSON-RPC.
+
+## Tools
+
+| Tool | Effect | Purpose |
+| --- | --- | --- |
+| economic_list_customers | Read | economic list customers |
+| economic_get_customer | Read | economic get customer |
+| economic_create_customer_contact | Explicit approval required | economic create customer contact |
+
+## Concrete workflow
+
+Find an accounting customer and add a named contact to that existing customer.
+
+1. economic_list_customers
+2. economic_get_customer
+3. economic_create_customer_contact
+
+## Optional writes
+
+Writes are disabled by default. Set CONNECTOR_ALLOW_WRITES=true and supply `_approval: {approved:true,idempotencyKey:"unique-request-id"}` on the specific call. Do not reuse a key for a different request. Uncertain outcomes are never automatically replayed; inspect the provider before another attempt.
+
+## Capability evidence
+
+Local: **Tested — HTTP fixtures and real stdio tools/call**. Managed: **Documented**. Provider authentication and live operations have not been established by these fixture tests. Evidence applies per operation and execution mode; setup discovery does not imply provider execution.
+
+## Managed production
+
+[Activate with PipMCP](https://pipmcp.com/github/start?app=e-conomic&integration=e-conomic-mcp&utm_source=github&utm_campaign=github-e-conomic-mcp&utm_content=readme) when you want the hosted service.  Local credentials are not uploaded by this code. Review provider permissions in the managed onboarding. [Directory and related projects](https://jannikco.github.io/pipmcp-connectors/integrations/e-conomic/).
+
+## Provenance and maintenance
+
+- https://restdocs.e-conomic.com/
+
+Maintainer:jannikco. MIT license for this code. See connector.json for selected operations and integration.json for evidence. Runtime dependencies retain their own licenses. Report sensitive issues through https://pipmcp.com/contact; do not post credentials or customer data in public issues.

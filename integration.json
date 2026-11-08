@@ -5,20 +5,23 @@
   "releaseEligible": true,
   "maintainer": "jannikco",
   "license": "MIT",
-  "sourceRevision": "edb23e8fda91aca794065d3ee52d1bd9f4fddcb1d017bded351eae8002640c1e",
+  "sourceRevision": "a0330cee59816f53135b333c904221261d3bece5a734e1c79fe72d9683906c7a",
   "evidence": [
-    "Source-backed provider setup metadata",
-    "Offline configuration and MCP protocol tests"
+    "Actual tools/call and direct-provider request contract tests"
   ],
   "provenance": [
     "https://restdocs.e-conomic.com/"
   ],
   "id": "e-conomic-mcp",
-  "kind": "mcp-setup",
+  "kind": "provider-connector",
   "product": "pipmcp",
-  "title": "e-conomic MCP setup and connection checker",
-  "description": "Generate e-conomic MCP client configuration, inspect available tools and validate hosted endpoint access through PipMCP.",
-  "operationIds": [],
+  "title": "e-conomic MCP server",
+  "description": "Find an accounting customer and add a named contact to that existing customer.",
+  "operationIds": [
+    "economic_list_customers",
+    "economic_get_customer",
+    "economic_create_customer_contact"
+  ],
   "appSlug": "e-conomic",
   "appName": "e-conomic",
   "providerDocs": "https://restdocs.e-conomic.com/",
@@ -28,10 +31,328 @@
     "requiredCredentialFields": [
       "provider_header_credentials"
     ],
+    "settings": {},
     "requiredHeaderNames": [],
     "helpUrl": "https://www.e-conomic.com/developer/connect",
     "tenantRequired": false,
     "accountParameterNames": []
   },
-  "attributionSlug": "github-e-conomic-mcp"
+  "attributionSlug": "github-e-conomic-mcp",
+  "artifactType": "connector",
+  "qualityVersion": 2,
+  "connectorId": "e-conomic",
+  "connector": {
+    "id": "e-conomic",
+    "name": "e-conomic",
+    "version": "0.1.0",
+    "baseUrl": "https://restapi.e-conomic.com",
+    "auth": {
+      "type": "header",
+      "env": "ECONOMIC_APP_SECRET_TOKEN",
+      "header": "X-AppSecretToken",
+      "extraHeaders": {
+        "X-AgreementGrantToken": {
+          "env": "ECONOMIC_AGREEMENT_GRANT_TOKEN"
+        }
+      }
+    },
+    "tools": [
+      {
+        "name": "economic_list_customers",
+        "description": "economic list customers",
+        "method": "GET",
+        "path": "/customers",
+        "readOnly": true,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "pagesize": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            },
+            "skippages": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "required": [],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [],
+          "query": {
+            "pagesize": "pagesize",
+            "skippages": "skippages"
+          },
+          "body": {}
+        },
+        "approvalRequired": false,
+        "provenance": [
+          "https://restdocs.e-conomic.com/"
+        ],
+        "evidence": {
+          "state": "documented",
+          "providerLiveValidation": "not-run"
+        },
+        "sampleArguments": {}
+      },
+      {
+        "name": "economic_get_customer",
+        "description": "economic get customer",
+        "method": "GET",
+        "path": "/customers/{customerNumber}",
+        "readOnly": true,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "customerNumber": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "customerNumber"
+          ],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [
+            "customerNumber"
+          ],
+          "query": {},
+          "body": {}
+        },
+        "approvalRequired": false,
+        "provenance": [
+          "https://restdocs.e-conomic.com/"
+        ],
+        "evidence": {
+          "state": "documented",
+          "providerLiveValidation": "not-run"
+        },
+        "sampleArguments": {
+          "customerNumber": 1001
+        }
+      },
+      {
+        "name": "economic_create_customer_contact",
+        "description": "economic create customer contact",
+        "method": "POST",
+        "path": "/customers/{customerNumber}/contacts",
+        "readOnly": false,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "customerNumber": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "name": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "customerNumber",
+            "name"
+          ],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [
+            "customerNumber"
+          ],
+          "query": {},
+          "body": {
+            "name": "name",
+            "email": "email"
+          }
+        },
+        "approvalRequired": true,
+        "provenance": [
+          "https://restdocs.e-conomic.com/"
+        ],
+        "evidence": {
+          "state": "documented",
+          "providerLiveValidation": "not-run"
+        },
+        "sampleArguments": {
+          "customerNumber": 1001,
+          "name": "Sandbox Example"
+        }
+      }
+    ],
+    "workflow": {
+      "name": "e-conomic-workflow",
+      "description": "Find an accounting customer and add a named contact to that existing customer.",
+      "steps": [
+        "economic_list_customers",
+        "economic_get_customer",
+        "economic_create_customer_contact"
+      ]
+    },
+    "provenance": [
+      "https://restdocs.e-conomic.com/"
+    ],
+    "sourceEvidence": {
+      "state": "documented",
+      "providerLiveValidation": "not-run",
+      "checkedAt": "2026-11-08",
+      "operationCount": 3,
+      "kind": "official-documentation"
+    },
+    "setup": {
+      "requiresPipMcpAccount": false,
+      "credentialsHelpUrl": "https://www.e-conomic.com/developer/connect",
+      "instructions": "Enter two lines: 'X-AppSecretToken: <your app secret token>' and 'X-AgreementGrantToken: <your agreement grant token>'. The app secret token comes from an app you create in a free e-conomic developer agreement (Apps tab); the grant token is produced when the e-conomic account owner opens that app's Installation URL and approves access."
+    },
+    "sampleWarning": "Example IDs are placeholders, not known provider records. Replace them with authorized sandbox/account IDs. Contact emails, file URLs and recipient numbers must be replaced with data you are authorized to use. Examples never authorize a write.",
+    "repoId": "e-conomic-mcp",
+    "appSlug": "e-conomic",
+    "product": "pipmcp",
+    "artifactType": "connector",
+    "sourceRevision": "a0330cee59816f53135b333c904221261d3bece5a734e1c79fe72d9683906c7a",
+    "capabilityEvidence": {
+      "local": {
+        "level": "Tested",
+        "operations": [
+          {
+            "name": "economic_list_customers",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          },
+          {
+            "name": "economic_get_customer",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          },
+          {
+            "name": "economic_create_customer_contact",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          }
+        ],
+        "evidenceRefs": [
+          "Provider request/stdio contract tests"
+        ],
+        "mode": "local"
+      },
+      "managed": {
+        "level": "Documented",
+        "operations": [
+          {
+            "name": "economic_list_customers",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          },
+          {
+            "name": "economic_get_customer",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          },
+          {
+            "name": "economic_create_customer_contact",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          }
+        ],
+        "evidenceRefs": [],
+        "mode": "managed"
+      }
+    },
+    "authentication": {
+      "type": "custom_headers",
+      "requiredCredentialFields": [
+        "provider_header_credentials"
+      ],
+      "settings": {},
+      "requiredHeaderNames": [],
+      "helpUrl": "https://www.e-conomic.com/developer/connect",
+      "tenantRequired": false,
+      "accountParameterNames": []
+    },
+    "managedAvailability": {
+      "status": "listed",
+      "checkedAt": "2026-11-08T12:29:10.433747+00:00"
+    }
+  },
+  "capabilityEvidence": {
+    "local": {
+      "level": "Tested",
+      "operations": [
+        {
+          "name": "economic_list_customers",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        },
+        {
+          "name": "economic_get_customer",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        },
+        {
+          "name": "economic_create_customer_contact",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        }
+      ],
+      "evidenceRefs": [
+        "Provider request/stdio contract tests"
+      ],
+      "mode": "local"
+    },
+    "managed": {
+      "level": "Documented",
+      "operations": [
+        {
+          "name": "economic_list_customers",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        },
+        {
+          "name": "economic_get_customer",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        },
+        {
+          "name": "economic_create_customer_contact",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        }
+      ],
+      "evidenceRefs": [],
+      "mode": "managed"
+    }
+  },
+  "utility": {
+    "problem": "Find an accounting customer and add a named contact to that existing customer.",
+    "output": "Actual provider API results through local MCP tools"
+  }
 }
