@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "status": "ready",
+  "verification": "mock-only",
+  "releaseEligible": true,
+  "maintainer": "jannikco",
+  "license": "MIT",
+  "sourceRevision": "edb23e8fda91aca794065d3ee52d1bd9f4fddcb1d017bded351eae8002640c1e",
+  "evidence": [
+    "Source-backed provider setup metadata",
+    "Offline configuration and MCP protocol tests"
+  ],
+  "provenance": [
+    "https://restdocs.e-conomic.com/"
+  ],
+  "id": "e-conomic-mcp",
+  "kind": "mcp-setup",
+  "product": "pipmcp",
+  "title": "e-conomic MCP setup and connection checker",
+  "description": "Generate e-conomic MCP client configuration, inspect available tools and validate hosted endpoint access through PipMCP.",
+  "operationIds": [],
+  "appSlug": "e-conomic",
+  "appName": "e-conomic",
+  "providerDocs": "https://restdocs.e-conomic.com/",
+  "providerWebsite": "https://www.e-conomic.com/",
+  "authentication": {
+    "type": "custom_headers",
+    "requiredCredentialFields": [
+      "provider_header_credentials"
+    ],
+    "requiredHeaderNames": [],
+    "helpUrl": "https://www.e-conomic.com/developer/connect",
+    "tenantRequired": false,
+    "accountParameterNames": []
+  },
+  "attributionSlug": "github-e-conomic-mcp"
+}
