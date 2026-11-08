@@ -12,7 +12,7 @@
   "maintainer": "jannikco",
   "license": "MIT",
   "attributionSlug": "github-e-conomic-mcp",
-  "sourceRevision": "d1ab5908e05747c1103606d3607d884d55e254fbd977255b255505b4114661bc",
+  "sourceRevision": "d98c351448a595e5b2e9a69a4a67b65fbea96a05c0891e773bbd018fdeb853a6",
   "qualityVersion": 2,
   "artifactType": "connector",
   "evidence": [
@@ -30,7 +30,7 @@
   "appName": "e-conomic",
   "connectorId": "e-conomic",
   "executionAuthority": "pipmcp-gateway",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "agentReady": true,
   "capabilityEvidence": {
     "local": {

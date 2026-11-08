@@ -1,0 +1,53 @@
+{
+  "id": "economic-customer-email-review",
+  "repositoryId": "e-conomic-mcp",
+  "product": "pipmcp",
+  "connectorId": "e-conomic",
+  "title": "Review e-conomic customer contact details",
+  "promise": "Identify customer records missing an email for an accounting-team review.",
+  "sourceRevision": "d98c351448a595e5b2e9a69a4a67b65fbea96a05c0891e773bbd018fdeb853a6",
+  "credential": "PIPMCP_API_KEY",
+  "transport": "pipmcp-gateway",
+  "sourceRefs": [
+    "https://restdocs.e-conomic.com/"
+  ],
+  "readTask": {
+    "intent": "Identify customer records missing an email for an accounting-team review.",
+    "requiredCapability": "Read-only authorized account data; discover actual names and schemas first"
+  },
+  "synthetic": {
+    "strategy": "equals",
+    "field": "emailPresent",
+    "value": false,
+    "records": [
+      {
+        "id": "synthetic-economic-c1",
+        "customerNumber": 1001,
+        "email": null
+      },
+      {
+        "id": "synthetic-economic-c2",
+        "customerNumber": 1002,
+        "email": "synthetic@example.invalid"
+      }
+    ],
+    "input": {
+      "limit": 10
+    },
+    "normalization": "Invented normalized review fields demonstrate task logic; live provider schemas and field mappings must be reviewed separately.",
+    "expectedReviewCount": 1,
+    "asOf": "2026-11-08T00:00:00Z",
+    "normalize": {
+      "type": "email-present",
+      "sourceField": "email"
+    }
+  },
+  "livePolicy": {
+    "default": "preflight-only",
+    "explicitReadSelectionRequired": true,
+    "providerWritesAllowed": false,
+    "sandboxWritesRequireSeparateApproval": true
+  },
+  "baseSourceRevision": "d1ab5908e05747c1103606d3607d884d55e254fbd977255b255505b4114661bc",
+  "releaseVersion": "1.1.0"
+}
